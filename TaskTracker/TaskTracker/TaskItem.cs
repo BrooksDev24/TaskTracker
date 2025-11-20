@@ -12,7 +12,10 @@ namespace TaskTracker
         public string Description { get; }
         public bool IsDone { get; private set; }
 
-        public TaskItem(int id, string description)
+        // NEW: optional due date for the task
+        public DateTime? DueDate { get; }
+
+        public TaskItem(int id, string description, DateTime? dueDate = null)
         {
             if (description == null)
             {
@@ -22,6 +25,7 @@ namespace TaskTracker
             Id = id;
             Description = description;
             IsDone = false;
+            DueDate = dueDate;  // store the due date (can be null)
         }
 
         public void MarkDone()
@@ -32,7 +36,13 @@ namespace TaskTracker
         public override string ToString()
         {
             string status = IsDone ? "[X]" : "[ ]";
-            return string.Format("{0} {1}: {2}", status, Id, Description);
+
+            
+            string dueText = DueDate.HasValue
+                ? $" (Due: {DueDate.Value:yyyy-MM-dd})"
+                : string.Empty;
+
+            return string.Format("{0} {1}: {2}{3}", status, Id, Description, dueText);
         }
     }
 }

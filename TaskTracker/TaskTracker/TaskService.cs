@@ -8,18 +8,19 @@ namespace TaskTracker
 {
     public class TaskService
     {
-
         private readonly List<TaskItem> _tasks = new List<TaskItem>();
         private int nextId = 1;
 
-        public TaskItem AddTask(string description)
+        // UPDATED: now accepts an optional dueDate
+        public TaskItem AddTask(string description, DateTime? dueDate = null)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
                 throw new ArgumentException("Description cannot be null or empty.", nameof(description));
             }
 
-            var task = new TaskItem(nextId++, description);
+            // pass dueDate into TaskItem (can be null)
+            var task = new TaskItem(nextId++, description, dueDate);
             _tasks.Add(task);
             return task;
         }
@@ -33,11 +34,9 @@ namespace TaskTracker
         {
             var task = _tasks.FirstOrDefault(t => t.Id == id);
             if (task == null) return false;
-            
+
             task.MarkDone();
             return true;
         }
-
-
     }
 }
