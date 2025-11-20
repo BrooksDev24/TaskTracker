@@ -76,9 +76,27 @@ namespace TaskTracker
             Console.Write("Description: ");
             string description = Console.ReadLine();
 
+            Console.Write("Due date (yyyy-MM-dd) or leave blank: ");
+            string dueInput = Console.ReadLine();
+
+            DateTime? dueDate = null;
+
+            if (!string.IsNullOrWhiteSpace(dueInput))
+            {
+                if (DateTime.TryParse(dueInput, out var parsedDate))
+                {
+                    dueDate = parsedDate;
+                }
+                else
+                {
+                    Console.WriteLine("Could not understand that date. Leaving due date empty.");
+                }
+            }
+
             try
             {
-                var task = service.AddTask(description ?? string.Empty);
+                // UPDATED: now pass dueDate into AddTask
+                var task = service.AddTask(description ?? string.Empty, dueDate);
                 Console.WriteLine("Added task #{0}", task.Id);
             }
             catch (ArgumentException ex)
